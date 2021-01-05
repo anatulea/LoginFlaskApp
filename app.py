@@ -20,7 +20,7 @@ def welcome_user():
 def logout():
     logout_user()
     flash("You logged out")
-    return redirect(url_for("home.html"))
+    return redirect(url_for("home"))
 
 
 @app.route('/login', methods = ['GET', 'POST'])
@@ -29,7 +29,7 @@ def login():                                                          #set up lo
     if form.validate_on_submit():                                     # check if form is valid on submition 
         user = User.query.filter_by(email = form.email.data).first()
 
-        if user.check_password(form.password.data) and user is not None: #check if password is correct and if user exists
+        if user is not None and  user.check_password(form.password.data) : #check if password is correct and if user exists
             login_user(user)                                             # we log in
             flash('Logged in Successfully!')                             # display success message
             
@@ -52,9 +52,9 @@ def register():
                     password = form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Thanks for registration!)
+        flash('Thanks for registration!')
         return redirect(url_for('login'))
-    retrun render_template('register.html', form=form)
+    return render_template('register.html', form=form)
 
 if __name__ == '__main__':
     app.run(debug = True)
